@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" This script provides stats about Nginx logs stored in MongoDB """
+""" Py script that provides some stats about Nginx logs stored in MongoDB """
 from pymongo import MongoClient
 
 if __name__ == "__main__":
@@ -13,15 +13,16 @@ if __name__ == "__main__":
     print("\tmethod PUT:", nginx_logs.count_documents({"method": "PUT"}))
     print("\tmethod PATCH:", nginx_logs.count_documents({"method": "PATCH"}))
     print("\tmethod DELETE:", nginx_logs.count_documents({"method": "DELETE"}))
-    print(nginx_logs.count_documents({"method": "GET", "path": "/status"}),
-          "status check")
+    print(
+        nginx_logs.count_documents({"method": "GET", "path": "/status"}), "status check"
+    )
 
-    print('IPs:')
+    print("IPs:")
     pipe = [
-            {'$group': {'_id': '$ip', 'count': {'$sum': 1}}},
-            {'$sort': {'count': -1}},
-            {'$limit': 10}
+        {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10},
     ]
     popular = list(nginx_logs.aggregate(pipe))
     for ip in popular:
-        print('\t{}: {}'.format(ip['_id'], ip['count']))
+        print("\t{}: {}".format(ip["_id"], ip["count"]))
