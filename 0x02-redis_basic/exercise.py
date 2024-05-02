@@ -50,11 +50,10 @@ def replay(method: Callable) -> None:
     print("{} was called {} times:".format(method.__qualname__, len(zippy)))
 
     for value, r_id in zippy:
-        print(
-            "{}(*{}) -> {}".format(
-                method.__qualname__, value.decode("utf-8"), r_id.decode("utf-8")
-            )
-        )
+        print("{}(*{}) -> {}".format(
+            method.__qualname__,
+            value.decode("utf-8"),
+            r_id.decode("utf-8")))
 
 
 class Cache:
@@ -73,7 +72,8 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int, float]:
+    def get(self, key: str,
+            fn: Callable = None) -> Union[str, bytes, int, float]:
         """Retrieve data from the cache using the specified key."""
         if fn:
             return fn(self._redis.get(key))
